@@ -14,6 +14,5 @@ WORKDIR /App
 COPY --from=build-env /App/out ./
 
 EXPOSE 8080
-ENV MY_ENV_VAR="valor"
 
 ENTRYPOINT ["dotnet", "TCFiapProducerDeleteContact.API.dll"]
