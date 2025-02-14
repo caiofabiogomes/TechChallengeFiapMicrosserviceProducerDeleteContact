@@ -8,53 +8,40 @@ on:
 
 jobs:
   build:
-
     strategy:
       matrix:
         configuration: [Debug, Release]
 
     runs-on: ubuntu-latest
-    
+
     env:
       Solution_Name: TCFiapProducerDeleteContact.sln
-      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }} 
-
+      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Instalar .NET 8
-      - name: Install .NET Core
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      # Restaurar e compilar
-      - name: Restore and build the application
+      - name: Restore and Build
         run: |
           dotnet restore ${{ env.Solution_Name }}
           dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} --no-restore
 
-      # Fazer login no Docker Hub
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Build and Push Docker Image (Only Release)
+        if: matrix.configuration == 'Release'
+        uses: docker/build-push-action@v6
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Construir a imagem Docker
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }} .
-          docker tag ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }} ${{ secrets.DOCKER_IMAGENAME }}:latest
-
-      # Enviar a imagem para o Docker Hub
-      - name: DOCKER PUSH
-        uses: docker/build-push-action@v6.9.0
-        with:
-            tags:  ${{ env.IMAGE_NAME }}:latest
-            context: .
-            push: true
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
