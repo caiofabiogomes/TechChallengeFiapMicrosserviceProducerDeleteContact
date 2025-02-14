@@ -2,12 +2,14 @@ using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var envHostRabbitMqServer = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
+
 // Add services to the container.
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq://localhost");
+        cfg.Host(envHostRabbitMqServer);
     });
 });
 
