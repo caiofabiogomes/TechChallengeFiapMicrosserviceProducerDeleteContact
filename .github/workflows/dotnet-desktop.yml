@@ -52,7 +52,9 @@ jobs:
           docker tag ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }} ${{ secrets.DOCKER_IMAGENAME }}:latest
 
       # Enviar a imagem para o Docker Hub
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_IMAGENAME }}:latest
+      - name: DOCKER PUSH
+        uses: docker/build-push-action@v6.9.0
+        with:
+            tags: ${{ secrets.DOCKER_IMAGENAME }}:'latest'
+            context: .
+            push: true
