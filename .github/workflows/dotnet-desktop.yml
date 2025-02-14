@@ -1,0 +1,41 @@
+name: Automated Workflow | Tech Challenge - FIAP
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]# This workflow uses actions that are not certified by GitHub.
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: ubuntu-latest
+    
+    env:
+      Solution_Name: TCFiapProducerDeleteContact.sln
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Install .NET Core SDK
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Add MSBuild to the PATH
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v2
+
+      # Restore and build the solution
+      - name: Restore and build the application
+        run: |
+          dotnet restore ${{ env.Solution_Name }}
+          dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} --no-restore
