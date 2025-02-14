@@ -55,6 +55,6 @@ jobs:
       - name: DOCKER PUSH
         uses: docker/build-push-action@v6.9.0
         with:
-            tags: ${{ secrets.DOCKER_IMAGENAME }}:latest
+            tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}:latest
             context: .
             push: true
