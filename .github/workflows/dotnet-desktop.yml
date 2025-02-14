@@ -17,7 +17,7 @@ jobs:
     
     env:
       Solution_Name: TCFiapProducerDeleteContact.sln
-      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}  # <-- Substitua pelo seu nome de usuário e nome da imagem
+      IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }} 
 
     steps:
       - name: Checkout
@@ -53,5 +53,5 @@ jobs:
       # Enviar a imagem para o Docker Hub
       - name: Push Docker image
         run: |
-          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          docker push ${{ env.IMAGE_NAME }}:latest
+          docker push ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_IMAGENAME }}:latest
