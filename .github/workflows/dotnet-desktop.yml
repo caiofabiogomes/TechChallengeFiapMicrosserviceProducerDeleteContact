@@ -19,6 +19,7 @@ jobs:
       Solution_Name: TCFiapProducerDeleteContact.sln
       IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }} 
 
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
