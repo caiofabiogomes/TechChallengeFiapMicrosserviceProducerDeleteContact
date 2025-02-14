@@ -48,8 +48,8 @@ jobs:
       # Construir a imagem Docker
       - name: Build Docker image
         run: |
-          docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
-          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
+          docker build -t ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }} .
+          docker tag ${{ secrets.DOCKER_IMAGENAME }}:${{ github.sha }} ${{ secrets.DOCKER_IMAGENAME }}:latest
 
       # Enviar a imagem para o Docker Hub
       - name: Push Docker image
