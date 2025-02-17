@@ -2,7 +2,7 @@ using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var envHostRabbitMqServer = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
+var envHostRabbitMqServer = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
 
 // Add services to the container.
 builder.Services.AddMassTransit(x =>
@@ -30,3 +30,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

@@ -16,6 +16,7 @@ jobs:
 
     env:
       Solution_Name: TCFiapProducerDeleteContact.sln
+      ProjectTest_Name:  TCFiapProducerDeleteContact.Tests/TCFiapProducerDeleteContact.Tests.csproj
       IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
 
     steps:
@@ -33,6 +34,15 @@ jobs:
         run: |
           dotnet restore ${{ env.Solution_Name }}
           dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }} --no-restore
+
+      - name: Run Tests
+        run: dotnet test ${{ env.ProjectTest_Name }} --configuration ${{ matrix.configuration }} --no-build --logger trx --results-directory TestResults
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: TestResults
 
       - name: Login to Docker Hub
         if: matrix.configuration == 'Release'
